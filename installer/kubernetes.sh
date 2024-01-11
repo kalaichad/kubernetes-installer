@@ -1,12 +1,20 @@
 #!/bin/bash
 echo -e "\n KUBERNETES INSTALLER \n" | tee -a info.log
 
+echo -e "NOTE: This script is installing the kubernetes and dependency packages also installing.\n
+if already installed the kubernertes or not properly installed means it will make conflicts.\n
+So make install the script in freash machine."
+sleep 10
+
 echo "Machine Type \n
 master (or) worker" | tee -a info.log
 
+function input_data {
 read -p "Enter Machine TYPE " mtype
-
-echo "Machine entered option ${mtype}" >> info.log
+${mtype} == "master" || ${mtype} == "worker" || echo "Give the vaild input 'master' (or) 'worker'" | tee -a info.log || input_data
+}
+input_data
+echo "Entered option ${mtype}" | tee -a info.log
 echo "PREREQUEST CHECKING." | tee -a info.log
 if ! ping -c 2 8.8.8.8 &> /dev/null
 then
@@ -16,7 +24,7 @@ then
 fi
 if [ "x86_64" != $(arch) ]
 then
-	echo "This $(arch) is not supported."
+	echo "This $(arch) type is not supported."
 	exit 1
 fi
 if [ $(grep -E 'NAME="Ubuntu"|VERSION_ID="22.04"' /etc/os-release -c) -ne 2 ]
@@ -75,8 +83,18 @@ if [ ${?} -ne 0 ]
 then
 	echo "containerd service issue to restarting" | tee -a info.log
 fi
-systemctl daemon-reload
+systemctl daemon-reload >> info.log
 apt install kubelet=1.29.* kubeadm=1.29.* -y &>> info.log
 systemctl start --now kubelet &>> info.log
-modprobe br_netfilter &> info.log || echo "br_netfilter module cant load into kernel" | tee -a info.log
+modprobe br_netfilter &>> info.log || echo "br_netfilter module can't load into kernel" | tee -a info.log
 
+if [ ${mtype} == "master" ]
+then
+	apt install kubectl=1.29.* -y &>> info.log
+	if [ -d /etc/kubernetes ]
+	then
+		touch /etc/kubernetes/kubeadm-config.yaml
+
+	fi
+fi
+echo "IF there is any issue on the script. Please drop the issue on github page"
