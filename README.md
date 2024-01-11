@@ -5,3 +5,6 @@ kubeadm-config yaml file need to mention the pod network range or you can leave 
 
 if there is any issue on this script mention the issue in github.
 
+Execute the **kubernetes.sh** script on master and worker nodes. 
+
+Please specify the which is master and worker
