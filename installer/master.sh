@@ -13,7 +13,7 @@ fi
 
 if [ ! -s ${current_path}/kubeadm-config.yaml ]
 then
-	echo "kubeadm-config.yaml not avilable in current path." | tee -a info.log
+	echo "kubeadm-config.yaml not available in current path." | tee -a info.log
 	exit 1
 else
 	cp ${current_path}/kubeadm-config.yaml /etc/kubernetes/kubeadm-config.yaml | tee -a info.log
