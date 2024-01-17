@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 current_path=$(pwd)
 echo -e "\n This script must be excute on Master node only\n" | tee -a info.log
+input_check
 function input_check {
 read -p "Press Enter to continue ? "
 if [ ! -z ${REPLY} ]
@@ -9,7 +10,7 @@ then
 	input_check
 fi
 }
-input_check
+
 if [ ! -s ${current_path}/kubeadm-config.yaml ]
 then
 	echo "kubeadm-config.yaml not avilable in current path." | tee -a info.log
